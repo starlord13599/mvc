@@ -1,0 +1,23 @@
+HomePage
+    -navbar
+        *navlinks
+        *login link
+
+    -content
+        *all detail stuff
+        *all product with base image
+        *each product with price,image,more option
+
+ProductDetailsPage
+    *price
+    *all images
+    *description
+    *all extra details
+
+Category
+    *will contain products according to categories
+
+
+Login
+    *form to take user details
+    *redirect to homepage(with user details in session)
