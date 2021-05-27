@@ -2,38 +2,100 @@
 
 namespace Block\Admin\Cmspages;
 
-use Block\Core\Template;
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $cmspages = null;
 
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->templateName  = './View/admin/cmspages/grid.php';
-    }
-
-    public function setCmsPages($cmspages = null)
-    {
-        if (!$cmspages) {
-            $cmspages = \Mage::getModel('Model\CmsPages');
-            $cmspages = $cmspages->fetchAll();
-
-            if ($cmspages) {
-                $cmspages = $cmspages->getData();
-            }
-        }
-
-        $this->cmspages = $cmspages;
+        $cmspages = \Mage::getModel('Model\CmsPages');
+        $collection = $cmspages->fetchAll();
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getCmsPages()
+    public function prepareColumns()
     {
-        if (!$this->cmspages) {
-            $this->setCmsPages();
-        }
+        $this->addColumn('pageId', [
+            'field' => 'pageId',
+            'label' => 'Id',
+            'type' => 'number'
+        ]);
 
-        return $this->cmspages;
+        $this->addColumn('title', [
+            'field' => 'title',
+            'label' => 'Title',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('identifier', [
+            'field' => 'identifier',
+            'label' => 'Identifier',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('content', [
+            'field' => 'content',
+            'label' => 'Content',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('status', [
+            'field' => 'status',
+            'label' => 'Status',
+            'type' => 'decimal'
+        ]);
+
+        $this->addColumn('createdDate', [
+            'field' => 'createdDate',
+            'label' => 'Created Date',
+            'type' => 'text'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->pageId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->pageId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "CMS Pages";
     }
 }

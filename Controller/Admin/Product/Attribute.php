@@ -25,7 +25,16 @@ class Attribute extends Admin
 
             $attributeData = $this->getRequest()->getPost('product');
 
+            if (!array_key_exists('deal_item', $attributeData)) {
+                $attributeData['deal_item'] = 0;
+            }
+
+            if (!array_key_exists('most_popular', $attributeData)) {
+                $attributeData['most_popular'] = 0;
+            }
+
             $product->setData($attributeData);
+
             $product->save();
             $this->redirect('form', 'Admin\Product', ['tabs' => 'Attribute'], false);
         }

@@ -2,42 +2,100 @@
 
 namespace Block\Admin\Customer;
 
-use Block\Core\Template;
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-\Mage::loadFileByClassName('Block\Core\Template');
-
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $customers = null;
-    protected $templateName = null;
 
-
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->templateName  = './View/admin/customer/grid.php';
-    }
-
-    public function setCustomers($customers = null)
-    {
-        if (!$customers) {
-            $customer = \Mage::getModel('Model\Customer');
-            $customers = $customer->fetchAll();
-
-            if ($customers) {
-                $customers = $customers->getData();
-            }
-        }
-
-        $this->customers = $customers;
+        $customer = \Mage::getModel('Model\Customer');
+        $collection = $customer->fetchAll();
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getCustomers()
+    public function prepareColumns()
     {
-        if (!$this->customers) {
-            $this->setCustomers();
-        }
+        $this->addColumn('customerId', [
+            'field' => 'customerId',
+            'label' => 'Id',
+            'type' => 'number'
+        ]);
 
-        return $this->customers;
+        $this->addColumn('firstName', [
+            'field' => 'firstName',
+            'label' => 'First Name',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('phone', [
+            'field' => 'phone',
+            'label' => 'Phone',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('email', [
+            'field' => 'email',
+            'label' => 'Email',
+            'type' => 'decimal'
+        ]);
+
+        $this->addColumn('status', [
+            'field' => 'status',
+            'label' => 'Status',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('groupId', [
+            'field' => 'groupId',
+            'label' => 'Group Id',
+            'type' => 'text'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->customerId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->customerId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "Customer List";
     }
 }

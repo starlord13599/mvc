@@ -12,50 +12,20 @@ class Home extends Customer
     public function indexAction()
     {
         $grid = \Mage::getBlock('Block\Customer\Home\Home');
+        $slider = \Mage::getBlock('Block\Customer\Home\Home\Slider');
+        $featuredCat = \Mage::getBlock('Block\Customer\Home\Home\FeaturedCat');
+        $featuredPro = \Mage::getBlock('Block\Customer\Home\Home\FeaturedPro');
+        $mostpopular = \Mage::getBlock('Block\Customer\Home\Home\MostPopular');
 
         $layout = $this->getLayout();
         $content = $layout->getChild('content');
 
         $content->addChild($grid);
+        $content->addChild($slider);
+        $content->addChild($featuredCat);
+        $content->addChild($featuredPro);
+        $content->addChild($mostpopular);
+
         $this->renderLayout();
-    }
-
-    public function loginAction()
-    {
-        $grid = \Mage::getBlock('Block\Customer\Home\Login');
-
-        $layout = $this->getLayout();
-        $content = $layout->getChild('content');
-
-        $content->addChild($grid);
-        $this->renderLayout();
-    }
-
-    public function productdetailsAction()
-    {
-        $grid = \Mage::getBlock('Block\Customer\Home\ProductDetails');
-
-        $product = \Mage::getModel('Model\Product');
-
-        if ($id = (int) $this->getRequest()->getGet('id')) {
-            $product = $product->load($id);
-
-            if (!$product) {
-                throw new \Exception("Record Not Found");
-            }
-        }
-
-        $grid->setTableRow($product);
-
-
-        $layout = $this->getLayout();
-        $content = $layout->getChild('content');
-
-        $content->addChild($grid);
-        $this->renderLayout();
-    }
-
-    public function afterLogin()
-    {
     }
 }

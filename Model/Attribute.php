@@ -12,13 +12,14 @@ class Attribute extends Table
     const STATUS_DISABLE = 0;
 
     const BACKEND_TYPE_VARCHAR = 'VARCHAR(20)';
-    const BACKEND_TYPE_INT = 'Int(11)';
+    const BACKEND_TYPE_INT = 'INT(11)';
     const BACKEND_TYPE_DECIMAL = 'Decimal';
     const BACKEND_TYPE_TEXT = 'Text';
 
-    const INPUT_TYPE_TEXT = 'Text';
-    const INPUT_TYPE_DROPDOWN = 'Dropdown';
-    const INPUT_TYPE_SELECT = 'Select';
+    const INPUT_TYPE_TEXT = 'text';
+    const INPUT_TYPE_DROPDOWN = 'dropdown';
+    const INPUT_TYPE_SELECT = 'select';
+    const INPUT_TYPE_CHECKBOX = 'checkbox';
 
     const ENTITY_TYPE_CUSTOMER = 'Customer';
     const ENTITY_TYPE_PRODUCT = 'Product';
@@ -54,14 +55,15 @@ class Attribute extends Table
         return [
             self::INPUT_TYPE_TEXT => 'text',
             self::INPUT_TYPE_SELECT => 'select',
-            self::INPUT_TYPE_DROPDOWN => 'Dropdown',
+            self::INPUT_TYPE_DROPDOWN => 'dropdown',
+            self::INPUT_TYPE_CHECKBOX => 'checkbox',
         ];
     }
     public function getEntityTypes()
     {
         return [
-            self::ENTITY_TYPE_CUSTOMER => 'Customer',
-            self::ENTITY_TYPE_PRODUCT => 'Product',
+            self::ENTITY_TYPE_CUSTOMER => 'customer',
+            self::ENTITY_TYPE_PRODUCT => 'product',
         ];
     }
 

@@ -2,43 +2,93 @@
 
 namespace Block\Admin\Shipment;
 
-use Block\Core\Template;
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-\Mage::loadFileByClassName('Block\Core\Template');
-
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $shipments = null;
-    // protected $templateName = null;
 
-
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->setTemplate('./View/Admin/shipment/grid.php');
-        // $this->templateName  = ;
-    }
-
-    public function setShipments($shipments = null)
-    {
-        if (!$shipments) {
-            $shipments = \Mage::getModel('Model\Shipment');
-            $shipments = $shipments->fetchAll();
-
-            if ($shipments) {
-                $shipments = $shipments->getData();
-            }
-        }
-
-        $this->shipments = $shipments;
+        $shipments = \Mage::getModel('Model\Shipment');
+        $collection = $shipments->fetchAll();
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getShipments()
+    public function prepareColumns()
     {
-        if (!$this->shipments) {
-            $this->setShipments();
-        }
+        $this->addColumn('methodId', [
+            'field' => 'methodId',
+            'label' => 'Method Id',
+            'type' => 'number'
+        ]);
 
-        return $this->shipments;
+        $this->addColumn('name', [
+            'field' => 'name',
+            'label' => ' Name',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('code', [
+            'field' => 'code',
+            'label' => 'Code',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('amount', [
+            'field' => 'amount',
+            'label' => 'Amount',
+            'type' => 'decimal'
+        ]);
+        $this->addColumn('createdDate', [
+            'field' => 'createdDate',
+            'label' => 'Created Date',
+            'type' => 'decimal'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->methodId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->methodId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "Shipment  List";
     }
 }

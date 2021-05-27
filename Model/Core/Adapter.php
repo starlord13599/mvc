@@ -158,6 +158,16 @@ class Adapter
 
         return $this->getConnect()->query($query);
     }
+
+    public function fetchOne($query)
+    {
+        if (!$this->connect) {
+            $this->setConnect();
+        }
+
+        $result = $this->getConnect()->query($query);
+        return $result->num_rows;
+    }
 }
 
 // $sql = new Sql;

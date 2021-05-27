@@ -10,6 +10,8 @@ namespace Controller\Core;
 class Admin extends Abstracts
 {
 
+    protected $session = null;
+
     public function setLayout(\Block\Core\Layout $layout = null)
     {
         if (!$layout) {
@@ -24,5 +26,20 @@ class Admin extends Abstracts
     {
         $this->admin_message = \Mage::getModel('Model\Admin\Message');
         return $this;
+    }
+
+    public function setSession()
+    {
+        $this->session = \Mage::getModel('Model\Admin\Session');
+        return $this;
+    }
+
+    public function getSession()
+    {
+        if (!$this->session) {
+            $this->setSession();
+        }
+
+        return $this->session;
     }
 }

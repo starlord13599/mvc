@@ -122,4 +122,20 @@ class Product extends Admin
             $this->redirect('grid', null, null, true);
         }
     }
+
+
+    public function testAction()
+    {
+        echo "<pre>";
+
+        $session = $this->getSession();
+
+        $postData = $this->getRequest()->getPost('filter');
+
+        foreach ($postData as $key => $data) {
+            $session->$key = $data;
+        }
+
+        $this->redirect('grid', null, null, true);
+    }
 }

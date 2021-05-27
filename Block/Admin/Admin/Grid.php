@@ -2,41 +2,94 @@
 
 namespace Block\Admin\Admin;
 
-use Block\Core\Template;
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-\Mage::loadFileByClassName('Block\Core\Template');
-
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $admins = null;
-    // protected $templateName = null;
 
-
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->setTemplate('./View/admin/admin/grid.php');
-    }
-
-    public function setAdmins($admins = null)
-    {
-        if (!$admins) {
-            $admins = \Mage::getModel('Model\Admin');
-            $admins = $admins->fetchAll();
-            if ($admins) {
-                $admins = $admins->getData();
-            }
-        }
-
-        $this->admins = $admins;
+        $admin = \Mage::getModel('Model\Admin');
+        $collection = $admin->fetchAll();
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getAdmins()
+    public function prepareColumns()
     {
-        if (!$this->admins) {
-            $this->setAdmins();
-        }
+        $this->addColumn('adminId', [
+            'field' => 'adminId',
+            'label' => 'Id',
+            'type' => 'number'
+        ]);
 
-        return $this->admins;
+        $this->addColumn('username', [
+            'field' => 'username',
+            'label' => 'UserName',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('password', [
+            'field' => 'password',
+            'label' => 'Password',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('status', [
+            'field' => 'status',
+            'label' => 'Status',
+            'type' => 'decimal'
+        ]);
+
+        $this->addColumn('createdDate', [
+            'field' => 'createdDate',
+            'label' => 'Created Date',
+            'type' => 'text'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->adminId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->adminId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "Admin List";
     }
 }

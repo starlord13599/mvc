@@ -204,4 +204,9 @@ class Table
     {
         return $this->getAdapter()->alter($query);
     }
+
+    public function fetchOne($query)
+    {
+        return $this->getAdapter()->fetchOne($query);
+    }
 }

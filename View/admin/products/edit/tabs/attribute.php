@@ -1,6 +1,5 @@
 <?php
 $product = $this->getTablerow();
-
 $attributes =  $this->getAttributes();
 ?>
 
@@ -10,8 +9,8 @@ $attributes =  $this->getAttributes();
     <?php if ($attributes) : ?>
         <?php foreach ($attributes as $attribute) : ?>
             <?php $name = $attribute->name ?>
-            <?php if ($attribute->inputType == 'select') : ?>
 
+            <?php if ($attribute->inputType == 'select') : ?>
                 <div class="col-md-12">
                     <label for="status" class="form-label"><?= $attribute->name ?></label>
                     <select id="status" name="product[<?= $attribute->name ?>]" class="form-select">
@@ -20,10 +19,19 @@ $attributes =  $this->getAttributes();
                         <?php endforeach ?>
                     </select>
                 </div>
-            <?php else : ?>
+            <?php endif  ?>
+
+            <?php if ($attribute->inputType == 'text') :  ?>
                 <div class="col-md-12">
                     <label for="name" class="form-label"><?= $attribute->name ?></label>
                     <input value="<?= $product->$name ?>" type="<?= $attribute->inputType ?>" name="product[<?= $attribute->name ?>]" class="form-control">
+                </div>
+            <?php endif ?>
+
+            <?php if ($attribute->inputType == 'checkbox') : ?>
+                <div class="mb-3 form-check">
+                    <label class="form-check-label"><?= $attribute->name ?></label>
+                    <input <?php if ($product->$name == 1) : ?> checked <?php endif ?> value="1" type="checkbox" name="product[<?= $attribute->name ?>]" class="form-check-input">
                 </div>
             <?php endif ?>
 

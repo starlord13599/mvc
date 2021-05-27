@@ -14,7 +14,7 @@ class Media extends Admin
 
     public function addAction()
     {
-        $dir = 'images/';
+        $dir = 'media/products/';
         $tmpName = $_FILES['image']['tmp_name'];
         $fileName = $_FILES['image']['name'];
 

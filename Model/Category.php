@@ -6,8 +6,6 @@ use Model\Core\Table;
 
 \Mage::loadFileByClassName('Model\Core\Table');
 
-
-
 class Category extends Table
 {
     const STATUS_ENABLE = 1;
@@ -59,5 +57,19 @@ class Category extends Table
                 $row->updatePathId();
             }
         }
+    }
+
+    public function getChildCategories()
+    {
+        $childcategory = \Mage::getModel('Model\Category');
+        $query = "SELECT * FROM `category` WHERE `parentId` = {$this->categoryId}";
+
+        $childcategory = $childcategory->fetchAll($query);
+
+        if ($childcategory) {
+            return $childcategory->getData();
+        }
+
+        return false;
     }
 }

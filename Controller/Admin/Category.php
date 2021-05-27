@@ -67,8 +67,29 @@ class Category extends Admin
                 $categoryPathId = $category->pathId;
 
                 $data = $this->getRequest()->getPost('category');
+
+                if (!array_key_exists('featured', $data)) {
+                    $data['featured'] = 0;
+                }
+
                 $category->setData($data);
                 $category->save();
+
+                $dir = 'media/category/';
+                $tmpName = $_FILES['category']['tmp_name']['image'];
+                $fileName = $_FILES['category']['name']['image'];
+
+                if (!file_exists($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+
+                $builtName = "{$dir}{$category->categoryId}_{$fileName}";
+
+                $result = move_uploaded_file($tmpName, "{$builtName}");
+
+                if ($result) {
+                    $category->image = $builtName;
+                }
 
                 $category->updatePathId();
 
@@ -97,6 +118,10 @@ class Category extends Admin
 
                     if (!$category) {
                         throw new \Exception("Unable to load");
+                    }
+
+                    if ($image = $category->image) {
+                        unlink($image);
                     }
                 };
 

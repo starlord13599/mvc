@@ -2,44 +2,111 @@
 
 namespace Block\Admin\Category;
 
-use Block\Core\Template;
 
-\Mage::loadFileByClassName('Block\Core\Template');
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $categories = null;
-    protected $templateName = null;
+
     protected $categoryOptions = null;
 
 
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->templateName  = './View/admin/category/grid.php';
-    }
-
-    public function setCategories($categories = null)
-    {
-        if (!$categories) {
-            $categories = \Mage::getModel('Model\Category');
-            $categories = $categories->fetchAll();
-
-            if ($categories) {
-                $categories = $categories->getData();
-            }
-        }
-
-        $this->categories = $categories;
+        $category = \Mage::getModel('Model\Category');
+        $collection = $category->fetchAll();
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getCategories()
+    public function prepareColumns()
     {
-        if (!$this->categories) {
-            $this->setCategories();
-        }
+        $this->addColumn('categoryId', [
+            'field' => 'categoryId',
+            'label' => 'Id',
+            'type' => 'number'
+        ]);
 
-        return $this->categories;
+        $this->addColumn('name', [
+            'field' => 'name',
+            'label' => 'Name',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('parentId', [
+            'field' => 'parentId',
+            'label' => 'Parent Id',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('pathId', [
+            'field' => 'pathId',
+            'label' => 'Path Id',
+            'type' => 'decimal'
+        ]);
+
+        $this->addColumn('status', [
+            'field' => 'status',
+            'label' => 'status',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('image', [
+            'field' => 'image',
+            'label' => 'Image',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('featured', [
+            'field' => 'featured',
+            'label' => 'Featured',
+            'type' => 'text'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->categoryId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->categoryId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "Category List";
     }
 
     public function getName($category)

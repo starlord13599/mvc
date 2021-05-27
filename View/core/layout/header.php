@@ -59,6 +59,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo $this->getUrl()->getUrl('grid', 'admin\attribute',  null, true); ?>">Attribute</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?php echo $this->getUrl()->getUrl('grid', 'admin\brand',  null, true); ?>">Brand</a>
+                    </li>
                 </ul>
             </div>
         </div>

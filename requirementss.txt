@@ -21,3 +21,12 @@ Category
 Login
     *form to take user details
     *redirect to homepage(with user details in session)
+
+
+
+Home Page
+	- banner
+	-featured category
+	-Most View Product
+	-Most Deal Product
+	-Brand icon

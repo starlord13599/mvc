@@ -2,39 +2,96 @@
 
 namespace Block\Admin\Product;
 
-use Block\Core\Template;
+\Mage::loadFileByClassName('Block\Core\Grid');
 
-// \Mage::loadFileByClassName('Block\Core\Template');
-
-class Grid extends Template
+class Grid extends \Block\Core\Grid
 {
-    protected $products = null;
 
-    public function __construct()
+    public function prepareCollection()
     {
-        $this->templateName  = './View/admin/products/grid.php';
-    }
+        $session = $this->getSession();
+        $products = \Mage::getModel('Model\Product');
 
-    public function setProducts($products = null)
-    {
-        if (!$products) {
-            $product = \Mage::getModel('Model\Product');
-            $products = $product->fetchAll();
-            if ($products) {
-                $products = $products->getData();
-            }
-        }
+        $id = $session->productId;
+        $name = $session->name;
+        $price = $session->price;
 
-        $this->products = $products;
+        $session->destroy();
+
+        $query = "SELECT * FROM `products`
+             WHERE 
+             `productId` LIKE '%{$id}%'
+                AND `name` LIKE '%{$name}%'
+                AND `price` LIKE '%{$price}%'";
+
+        $collection = $products->fetchAll($query);
+        $this->setCollection($collection);
         return $this;
     }
 
-    public function getProducts()
+    public function prepareColumns()
     {
-        if (!$this->products) {
-            $this->setProducts();
-        }
+        $this->addColumn('productId', [
+            'field' => 'productId',
+            'label' => 'Product Id',
+            'type' => 'number'
+        ]);
 
-        return $this->products;
+        $this->addColumn('name', [
+            'field' => 'name',
+            'label' => 'Product Name',
+            'type' => 'text'
+        ]);
+
+        $this->addColumn('price', [
+            'field' => 'price',
+            'label' => 'Product Price',
+            'type' => 'number'
+        ]);
+        return $this;
+    }
+
+    public function prepareActions()
+    {
+        $this->addActions('edit', [
+            'label' => 'Edit',
+            'method' => 'getEditUrl',
+            'class' => 'btn btn-primary'
+        ]);
+        $this->addActions('delete', [
+            'label' => 'Delete',
+            'method' => 'getDeleteUrl',
+            'class' => 'btn btn-danger'
+        ]);
+        return $this;
+    }
+
+    public function prepareButtons()
+    {
+        $this->addButtons('Create', [
+            'label' => 'Create',
+            'method' => 'getCreateUrl',
+            'class' => 'btn btn-primary'
+        ]);
+    }
+
+    public function getEditUrl($row)
+    {
+        return $this->getUrl()->getUrl('form', null, ['id' => $row->productId]);
+    }
+
+    public function getDeleteUrl($row)
+    {
+        return $this->getUrl()->getUrl('delete', null, ['id' => $row->productId]);
+    }
+
+    public function getCreateUrl()
+    {
+        return $this->getUrl()->getUrl('form');
+    }
+
+    public function getTitle()
+    {
+        return "Product List";
     }
 }
